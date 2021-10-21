@@ -1,9 +1,13 @@
 package vault
 
-import "github.com/hashicorp/vault/api"
+import (
+	"fmt"
+
+	"github.com/hashicorp/vault/api"
+)
 
 type VaultClient interface {
-	GetSecretsV2(path string) (map[string]interface{}, error)
+	GetSecretsV2(path string, args ...interface{}) (map[string]interface{}, error)
 }
 
 type vaultClientImpl struct {
@@ -28,8 +32,8 @@ func NewVaultClient(url string, auth Authenticator) (VaultClient, error) {
 	return v, nil
 }
 
-func (v vaultClientImpl) GetSecretsV2(path string) (map[string]interface{}, error) {
-	secret, err := v.client.Logical().Read(path)
+func (v vaultClientImpl) GetSecretsV2(path string, args ...interface{}) (map[string]interface{}, error) {
+	secret, err := v.client.Logical().Read(fmt.Sprintf(path, args...))
 	if err != nil {
 		return nil, err
 	}
