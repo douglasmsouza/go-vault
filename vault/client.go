@@ -7,7 +7,7 @@ import (
 )
 
 type VaultClient interface {
-	GetSecretsV2(path string, args ...interface{}) (map[string]interface{}, error)
+	GetSecretV2(path string, args ...interface{}) (*Secret, error)
 }
 
 type vaultClientImpl struct {
@@ -32,11 +32,13 @@ func NewVaultClient(url string, auth Authenticator) (VaultClient, error) {
 	return v, nil
 }
 
-func (v vaultClientImpl) GetSecretsV2(path string, args ...interface{}) (map[string]interface{}, error) {
+func (v vaultClientImpl) GetSecretV2(path string, args ...interface{}) (*Secret, error) {
 	secret, err := v.client.Logical().Read(fmt.Sprintf(path, args...))
 	if err != nil {
 		return nil, err
 	}
-	m, _ := secret.Data["data"].(map[string]interface{})
+	m := &Secret{
+		data: secret.Data["data"].(map[string]interface{}),
+	}
 	return m, nil
 }
