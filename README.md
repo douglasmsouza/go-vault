@@ -22,7 +22,7 @@ func main() {
 	}
 	url := "your vault url"
 	client, _ := vault.NewVaultClient(url, auth)
-	secrets, _ := client.GetSecretsV2("secrets/data/mysecret")
+	secrets, _ := client.GetSecretV2("secrets/data/mysecret")
 	fmt.Printf("%v", secrets)
 }
 
