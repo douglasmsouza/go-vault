@@ -1,6 +1,8 @@
 package vault
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 type Secret struct {
 	data map[string]interface{}
@@ -22,12 +24,16 @@ func (s Secret) GetBool(name string, defaultVal bool) bool {
 	return value.(bool)
 }
 
-func (s Secret) GetInt(name string, defaultVal int64) (int64, error) {
+func (s Secret) GetInt(name string, defaultVal int) (int, error) {
 	value := s.data[name]
 	if value == nil {
 		return defaultVal, nil
 	}
-	return value.(json.Number).Int64()
+	i, err := value.(json.Number).Int64()
+	if err != nil {
+		return 0, err
+	}
+	return int(i), nil
 }
 
 func (s Secret) GetFloat(name string, defaultVal float64) (float64, error) {
