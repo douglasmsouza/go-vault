@@ -37,8 +37,15 @@ func (v vaultClientImpl) GetSecretV2(path string, args ...interface{}) (*Secret,
 	if err != nil {
 		return nil, err
 	}
+
+	if secret == nil {
+		m := NewEmptySecret()
+		return m, nil
+	}
+
 	m := &Secret{
 		data: secret.Data["data"].(map[string]interface{}),
 	}
 	return m, nil
+
 }

@@ -10,6 +10,10 @@ type Secret struct {
 	data map[string]interface{}
 }
 
+func NewEmptySecret() *Secret {
+	return &Secret{data: make(map[string]interface{})}
+}
+
 func (s Secret) GetString(name, defaultVal string) string {
 	value := s.data[name]
 	if value == nil {
